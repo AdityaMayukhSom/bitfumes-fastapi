@@ -22,7 +22,7 @@ services:
     env_file:
       - ./config/.env.mysql
     ports:
-      - '6969:6969'
+      - '6969:3306'
     expose:
       - 6969
     volumes:
