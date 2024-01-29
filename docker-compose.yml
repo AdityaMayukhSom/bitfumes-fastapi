@@ -1,0 +1,45 @@
+version: '3.8'
+
+volumes:
+  mysql-db:
+    driver: local
+    name: "mysql-db-data"
+
+# secrets:
+#   root-password:
+#     file: ./secrets/root_password.txt
+#   devstream-password:
+#     file: ./secrets/devstream_password.txt
+
+networks:
+  fastapi-net:
+
+
+services:
+  mysql:
+    image: mysql:8.0.36
+    restart: always
+    env_file:
+      - ./config/.env.mysql
+    ports:
+      - '6969:6969'
+    expose:
+      - 6969
+    volumes:
+      - mysql-db:/var/lib/mysql
+    networks:
+      - fastapi-net
+
+  # adminer is used as an nweb UI for managine the database connection
+  adminer:
+    image: adminer
+    restart: always
+    environment:
+      ADMINER_DEFAULT_SERVER: mysql
+      ADMINER_DESIGN: hydra
+    ports:
+      - '8080:8080'
+    networks:
+      - fastapi-net
+    depends_on:
+      - mysql
